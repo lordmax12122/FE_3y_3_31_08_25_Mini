@@ -1,10 +1,13 @@
 import { Task } from "components/Task/Task";
+import { useSelector } from "react-redux";
+import { getTodos } from "redux/selectors";
 import css from "./TaskList.module.css";
 
 export const TaskList = () => {
+  const tasks = useSelector(getTodos);
   return (
     <ul className={css.list}>
-      {[].map(task => (
+      {tasks.map(task => (
         <li className={css.listItem} key={task.id}>
           <Task task={task} />
         </li>
