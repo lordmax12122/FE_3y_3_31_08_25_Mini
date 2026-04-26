@@ -1,1 +1,24 @@
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables and secrets
+.env
+*.pem
+
+# Ignore log files and temporary files
+*.log
+tmp/
+temp/
+
+# Ignore IDE-specific settings
+.vscode/
+.idea/
+*.swp
+
+# Ignore dependency directories (example for Node.js)
 node_modules/
+
+# Ignore build outputs
+dist/
+build/
