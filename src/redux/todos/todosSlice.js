@@ -1,58 +1,48 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { nanoid } from "nanoid";
+import { fetchTodos } from "./todosOperations";
 
-const initialState = [
-    { id: 1, completed: false, text: "Hello world!" },
-    { id: 2, completed: false, text: "Веномечеинесама" }
-]
+const initialState = {
+  error: null,
+  loading: false,
+  todos: [],
+};
 
 const todosSlice = createSlice({
-    name: "todos",
-    initialState,
-    reducers: {
-        addTodo: {
-            reducer(state, action) {
-                state.push(action.payload);
-            },
-            prepare(text) {
-                return {
-                    payload: {
-                        id: nanoid(),
-                        completed: false,
-                        text,
-                    },
-                };
-            },
-        },
-        removeTodo: {
-            reducer(state, action) {
-                return state.filter(todo => todo.id !== action.payload);
-            },
-            prepare(id) {
-                return {
-                    payload: id,
-                };
-            },
-        },
-        toggleTodo: {
-            reducer(state, action) {
-                const todo = state.find(todo => todo.id === action.payload);
-                if (todo) {
-                    todo.completed = !todo.completed;
-                }
-            },
-            prepare(id) {
-                return {
-                    payload: id,
-                };
-            },
-        },
-    },
+  name: "todos",
+  initialState,
+  // reducers: {
+  //   addToDo: {
+  //     reducer(state, action) {
+  //       state.push(action.payload); // Можна мотувати, бо є immer
+  //     },
+  //     prepare(text) {
+  //       return {
+  //         payload: {
+  //           id: nanoid(),
+  //           comleted: false,
+  //           text,
+  //         },
+  //       };
+  //     },
+  //   },
+  // },
+  extraReducers: builder => {
+    builder.addCase(fetchTodos.pending, state => {
+      state.loading = true;
+    });
+    builder.addCase(fetchTodos.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(fetchTodos.fulfilled, (state, action) => {
+      state.loading = false;
+      state.todos = action.payload;
+    });
+  },
 });
 
-export default todosSlice;
+// export default todosSlice;
 
-export const { addTodo } = todosSlice.actions;
-export const { toggleTodo } = todosSlice.actions;
-export const { removeTodo } = todosSlice.actions;
+// export const { addToDo } = todosSlice.actions;
+
 export const todosReducer = todosSlice.reducer;
